@@ -6,6 +6,8 @@ const FILES_TO_CACHE = [
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png',
   '/db.js',
+  'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
+  'https://cdn.jsdelivr.net/npm/chart.js@2.8.0'
 ];
 
 const PRECACHE = 'precache-v1';
@@ -41,20 +43,58 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  if (event.request.url.startsWith(self.location.origin)) {
-    event.respondWith(
-      caches.match(event.request).then((cachedResponse) => {
-        if (cachedResponse) {
-          return cachedResponse;
-        }
 
-        return caches.open(RUNTIME).then((cache) => {
-          return fetch(event.request).then((response) => {
-            return cache.put(event.request, response.clone()).then(() => {
-              return response;
+
+
+  console.log(self.location.origin);
+
+  // if (event.request.url.startsWith(self.location.origin)) {
+
+  // network first
+
+  // relay to fetch
+
+  // overwrite existing cache & return response
+
+  // if failed, find in cache
+  if (true) {
+    event.respondWith(
+
+      fetch(event.request)
+        .then(response => {
+          if(event.request.method === 'GET'){
+            return caches.open(RUNTIME).then((cache) => {
+              return cache.put(event.request, response.clone())
+              .then(() => {
+                return response;
+              });
             });
-          });
-        });
+          }
+        })
+        .catch((err) => {
+          return caches.match(event.request).then((cachedResponse) => {
+            if (cachedResponse) {
+              return cachedResponse;
+            }
+            throw err;
+        })
+    
+      
+        
+
+      
+        // return caches.open(RUNTIME).then((cache) => {
+        //   return fetch(event.request)
+        //     .then((response) => {
+        //       if(event.request.method !== 'GET'){
+        //         return response;
+        //       }
+        //       return cache.put(event.request, response.clone())
+        //         .then(() => {
+        //           return response;
+        //         });
+        //     })
+        // });
       })
     );
   }

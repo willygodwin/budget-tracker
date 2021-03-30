@@ -16,6 +16,8 @@ app.use(express.json());
 
 app.use(express.static("public"));
 
+console.log(process.env.MONGODB_DSN)
+
 mongoose.connect(process.env.MONGODB_DSN, {useNewUrlParser: true, useFindAndModify: false});
 
 // mongoose.connect("mongodb://localhost/budget", {
